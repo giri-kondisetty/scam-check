@@ -97,9 +97,14 @@ const SIGNALS = [
   },
 ];
 
+const WARNS_NOT_TO_SHARE = /\b(do not|don't|never) (share|give|tell)\b/i;
+const ASKS_TO_SEND = /\b(reply|send|forward|read (it |the code )?out)\b/i;
+
 export function textSignals(text) {
   const found = [];
+  const genuineCodeNotice = WARNS_NOT_TO_SHARE.test(text) && !ASKS_TO_SEND.test(text);
   for (const signal of SIGNALS) {
+    if (signal.id === 'asks-for-code' && genuineCodeNotice) continue;
     if (signal.patterns.some((p) => p.test(text))) {
       found.push({ id: signal.id, weight: signal.weight, title: signal.title, detail: signal.detail });
     }

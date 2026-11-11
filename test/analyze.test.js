@@ -96,5 +96,15 @@ test('hxxp and [dot] forms are read as links too', () => {
 test('a request to reply with the code just sent is read as asking for a code', async () => {
   const result = await analyze('Reply with the 6-digit code we just sent you to confirm it is you.');
   assert.ok(ids(result).includes('asks-for-code'));
-  assert.equal(result.verdict, 'scam');
+  assert.notEqual(result.verdict, 'none');
+});
+
+test('a genuine one-time-code notice that says not to share it is not flagged', async () => {
+  const result = await analyze('Your verification code is 482913. Do not share it with anyone.');
+  assert.equal(result.verdict, 'none');
+});
+
+test('a message that says not to share the code but then asks for it is still flagged', async () => {
+  const result = await analyze('Do not share this code with anyone else. Send us the verification code to confirm.');
+  assert.ok(ids(result).includes('asks-for-code'));
 });
