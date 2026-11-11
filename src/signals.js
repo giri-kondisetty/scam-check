@@ -6,6 +6,8 @@ const SIGNALS = [
     detail: 'A real company never asks you to send a one-time code, PIN or password.',
     patterns: [
       /\b(otp|one[- ]time (pass)?code|verification code|security code|auth(entication)? code|2fa code)\b/i,
+      /\b\d{4,8}[- ]digit (code|pin)\b/i,
+      /\bcode (we|that we|just) (just )?(sent|texted)\b/i,
       /\b(send|share|tell|give|confirm|enter|provide)\b[^.!?\n]{0,40}\b(pin|password|passcode|cvv|card number|login details)\b/i,
     ],
   },

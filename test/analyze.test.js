@@ -92,3 +92,9 @@ test('a link written with [.] is read as the real address', async () => {
 test('hxxp and [dot] forms are read as links too', () => {
   assert.equal(extractLinks('hxxps://paypal-login[dot]example[.]xyz/a')[0].host, 'paypal-login.example.xyz');
 });
+
+test('a request to reply with the code just sent is read as asking for a code', async () => {
+  const result = await analyze('Reply with the 6-digit code we just sent you to confirm it is you.');
+  assert.ok(ids(result).includes('asks-for-code'));
+  assert.equal(result.verdict, 'scam');
+});

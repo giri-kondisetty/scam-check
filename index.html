@@ -3,29 +3,60 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
   <title>Scam check</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main>
-    <h1>Scam check</h1>
-    <label for="message">Paste a message or link</label>
-    <textarea id="message" rows="7" autocomplete="off" spellcheck="false"></textarea>
-    <div class="row">
-      <button id="check" type="button">Check</button>
-      <button id="clear" type="button" class="quiet">Clear</button>
-    </div>
-    <section id="result" aria-live="polite" hidden>
-      <h2 id="verdict"></h2>
-      <p id="next"></p>
-      <ul id="reasons"></ul>
-      <p id="coverage" class="note"></p>
-    </section>
+  <div class="page">
+    <header class="top">
+      <h1>Scam check</h1>
+      <p>Paste a message, a link or a website address. It is checked on this device. Nothing is sent or stored.</p>
+    </header>
+
+    <main>
+      <form id="form" class="input" autocomplete="off">
+        <label for="message">Message or link</label>
+        <textarea id="message" rows="6" placeholder="Paste it here" spellcheck="false"></textarea>
+        <div class="actions">
+          <button id="check" type="submit" class="primary">Check</button>
+          <button id="clear" type="button" class="ghost">Clear</button>
+          <span class="hint">Ctrl + Enter</span>
+        </div>
+        <div class="examples" role="group" aria-label="Examples">
+          <span>Try an example</span>
+          <button type="button" data-example="parcel">Parcel fee</button>
+          <button type="button" data-example="bank">Bank code</button>
+          <button type="button" data-example="boss">Gift cards</button>
+          <button type="button" data-example="normal">Ordinary message</button>
+        </div>
+      </form>
+
+      <section id="result" class="result" tabindex="-1" aria-live="polite" hidden>
+        <div class="verdict">
+          <span id="icon" class="icon" aria-hidden="true"></span>
+          <div>
+            <h2 id="verdict"></h2>
+            <p id="summary"></p>
+          </div>
+        </div>
+        <div class="next">
+          <h3>What to do</h3>
+          <p id="next"></p>
+        </div>
+        <div id="why" class="why">
+          <h3>Why</h3>
+          <ul id="reasons"></ul>
+        </div>
+        <p id="coverage" class="note"></p>
+      </section>
+    </main>
+
     <footer>
-      <p>Your message is checked on this device and is not sent or stored.</p>
+      <p id="listinfo"></p>
       <p><a href="https://github.com/giri-kondisetty/scam-check">Source and how it works</a></p>
     </footer>
-  </main>
+  </div>
   <script type="module" src="src/app.js"></script>
 </body>
 </html>
