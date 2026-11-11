@@ -1,0 +1,83 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { analyze } from '../src/analyze.js';
+import { extractLinks, linkSignals, registrableDomain } from '../src/links.js';
+import { createBlocklist, hostHash } from '../src/blocklist.js';
+
+const ids = (result) => result.reasons.map((r) => r.id);
+
+test('a bank message asking for a code through a look-alike link is a scam', async () => {
+  const result = await analyze(
+    'Your Chase account has been suspended. Verify within 24 hours and enter your security code at http://chase-secure-login.example-verify.com/login',
+  );
+  assert.equal(result.verdict, 'scam');
+  assert.ok(ids(result).includes('asks-for-code'));
+  assert.ok(ids(result).includes('impersonates-brand'));
+  assert.ok(ids(result).includes('urgency'));
+});
+
+test('a gift card request is a scam on its own', async () => {
+  const result = await analyze('Hi, I am in a meeting. Can you buy 3 Apple gift cards and send me the codes?');
+  assert.equal(result.verdict, 'scam');
+  assert.match(result.nextStep, /Do not pay/);
+});
+
+test('an ordinary message has no warning signs and does not claim to be safe', async () => {
+  const result = await analyze('Hey, are we still on for dinner on Friday at 7? Let me know.');
+  assert.equal(result.verdict, 'none');
+  assert.equal(result.reasons.length, 0);
+  assert.match(result.nextStep, /not proof/);
+});
+
+test('a real brand link is not flagged as imitation', () => {
+  const [link] = extractLinks('Track it at https://www.amazon.co.uk/orders');
+  assert.equal(link.host, 'amazon.co.uk');
+  assert.deepEqual(linkSignals(link), []);
+});
+
+test('a brand name on someone else\'s domain is flagged', () => {
+  const [link] = extractLinks('https://paypal.com.account-review.xyz/verify');
+  assert.ok(linkSignals(link).some((s) => s.id === 'impersonates-brand'));
+});
+
+test('a single mild sign asks for care, not a scam verdict', async () => {
+  const result = await analyze('Reminder: your parcel will be returned. Reply urgently to rearrange delivery.');
+  assert.equal(result.verdict, 'careful');
+});
+
+test('registrable domain handles two-level suffixes', () => {
+  assert.equal(registrableDomain('a.b.example.co.uk'), 'example.co.uk');
+  assert.equal(registrableDomain('login.example.com'), 'example.com');
+});
+
+test('a link whose site or parent site is on the reported list is a scam', async () => {
+  const hash = await hostHash('bad-site.test');
+  const blocklist = createBlocklist(async (key) => (key === hash.slice(0, 2) ? `${hash}\n` : ''));
+  const result = await analyze('see https://login.bad-site.test/a', { blocklist });
+  assert.equal(result.verdict, 'scam');
+  assert.equal(result.reasons[0].id, 'reported');
+  assert.equal(result.blocklistChecked, true);
+});
+
+test('a failed list download does not break the check and is reported as unchecked', async () => {
+  const blocklist = createBlocklist(async () => {
+    throw new Error('offline');
+  });
+  const result = await analyze('see https://example.org/a', { blocklist });
+  assert.equal(result.verdict, 'none');
+  assert.equal(result.blocklistChecked, false);
+});
+
+test('empty input gives no verdict', async () => {
+  assert.equal((await analyze('   ')).verdict, 'empty');
+});
+
+test('words joined by a full stop are not read as links', async () => {
+  const result = await analyze('I ordered it from amazon.Thanks for checking.See you at the meeting.Can you call?');
+  assert.equal(result.linkCount, 0);
+  assert.equal(result.verdict, 'none');
+});
+
+test('a bare site name with a common ending is read as a link', () => {
+  assert.equal(extractLinks('go to paypa1-secure.xyz/login now')[0].host, 'paypa1-secure.xyz');
+});

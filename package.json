@@ -1,0 +1,12 @@
+{
+  "name": "scam-check",
+  "version": "0.1.0",
+  "description": "Check a message or link for signs of a scam, in the browser.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test",
+    "blocklist": "node scripts/build-blocklist.mjs"
+  }
+}

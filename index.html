@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scam check</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <h1>Scam check</h1>
+    <label for="message">Paste a message or link</label>
+    <textarea id="message" rows="7" autocomplete="off" spellcheck="false"></textarea>
+    <div class="row">
+      <button id="check" type="button">Check</button>
+      <button id="clear" type="button" class="quiet">Clear</button>
+    </div>
+    <section id="result" aria-live="polite" hidden>
+      <h2 id="verdict"></h2>
+      <p id="next"></p>
+      <ul id="reasons"></ul>
+      <p id="coverage" class="note"></p>
+    </section>
+    <footer>
+      <p>Your message is checked on this device and is not sent or stored.</p>
+      <p><a href="https://github.com/giri-kondisetty/scam-check">Source and how it works</a></p>
+    </footer>
+  </main>
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>
