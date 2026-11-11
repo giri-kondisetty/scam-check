@@ -81,3 +81,14 @@ test('words joined by a full stop are not read as links', async () => {
 test('a bare site name with a common ending is read as a link', () => {
   assert.equal(extractLinks('go to paypa1-secure.xyz/login now')[0].host, 'paypa1-secure.xyz');
 });
+
+test('a link written with [.] is read as the real address', async () => {
+  const result = await analyze('usps.com-track-package[.]info');
+  assert.equal(result.verdict, 'scam');
+  assert.ok(result.reasons.some((r) => r.id === 'impersonates-brand'));
+  assert.match(result.reasons[0].detail, /com-track-package\.info/);
+});
+
+test('hxxp and [dot] forms are read as links too', () => {
+  assert.equal(extractLinks('hxxps://paypal-login[dot]example[.]xyz/a')[0].host, 'paypal-login.example.xyz');
+});

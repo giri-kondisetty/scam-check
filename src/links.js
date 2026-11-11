@@ -45,7 +45,16 @@ export function registrableDomain(host) {
   return TWO_LEVEL_SUFFIXES.has(lastTwo) ? labels.slice(-3).join('.') : lastTwo;
 }
 
-export function extractLinks(text) {
+export function refang(text) {
+  return text
+    .replace(/\s*[\[({]\s*(?:\.|dot)\s*[\])}]\s*/gi, '.')
+    .replace(/\bh(?:xx|\*\*)p(s?)(?=:|\[)/gi, 'http$1')
+    .replace(/\[:\]/g, ':')
+    .replace(/\[\/\]/g, '/');
+}
+
+export function extractLinks(input) {
+  const text = refang(input);
   const links = [];
   const seen = new Set();
   for (const match of text.matchAll(URL_RE)) {
