@@ -30,7 +30,7 @@ jobs:
       - run: npm test
       - run: |
           mkdir -p _site
-          cp -r index.html style.css src _site/
+          cp -r site/. _site/
           node scripts/build-blocklist.mjs _site/data/blocklist
       - uses: actions/upload-pages-artifact@v3
         with:

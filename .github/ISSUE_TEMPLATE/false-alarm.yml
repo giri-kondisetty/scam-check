@@ -1,0 +1,20 @@
+name: A genuine message it flagged
+description: A real message that came back as a scam or as be careful
+labels: [false-alarm]
+body:
+  - type: textarea
+    id: message
+    attributes:
+      label: The message or link
+      description: Remove names, phone numbers and account numbers first.
+    validations:
+      required: true
+  - type: input
+    id: verdict
+    attributes:
+      label: What the page said
+      placeholder: Likely a scam
+  - type: textarea
+    id: why
+    attributes:
+      label: How you know it is genuine

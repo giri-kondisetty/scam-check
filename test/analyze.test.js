@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { analyze } from '../src/analyze.js';
-import { extractLinks, linkSignals, registrableDomain } from '../src/links.js';
-import { createBlocklist, hostHash } from '../src/blocklist.js';
+import { analyze } from '../site/src/analyze.js';
+import { extractLinks, linkSignals, registrableDomain } from '../site/src/links.js';
+import { createBlocklist, hostHash } from '../site/src/blocklist.js';
 
 const ids = (result) => result.reasons.map((r) => r.id);
 

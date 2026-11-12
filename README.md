@@ -44,11 +44,20 @@ chosen by a hash of the site name. The site name itself is never sent.
 ```bash
 npm test
 node scripts/build-blocklist.mjs _site/data/blocklist
-cp -r index.html style.css src _site/
+cp -r site/. _site/
 npx serve _site
 ```
 
 There is no build step and no dependencies.
+
+## Layout
+
+```
+site/        the page: index.html, style.css, src/ (the checking rules)
+scripts/     builds the reported-sites list
+test/        tests for the rules
+.github/     daily build and deploy, issue forms
+```
 
 ## Contributing
 

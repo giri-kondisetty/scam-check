@@ -1,0 +1,16 @@
+name: A scam it missed
+description: A scam message or link that came back with no warning signs
+labels: [missed-scam]
+body:
+  - type: textarea
+    id: message
+    attributes:
+      label: The message or link
+      description: Remove names, phone numbers and account numbers first.
+    validations:
+      required: true
+  - type: input
+    id: verdict
+    attributes:
+      label: What the page said
+      placeholder: No warning signs found
