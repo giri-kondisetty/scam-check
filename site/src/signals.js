@@ -18,7 +18,8 @@ const SIGNALS = [
     detail: 'Gift cards, crypto and wire transfers are what scammers ask for, because the money cannot be recovered.',
     patterns: [
       /\b(gift ?cards?|itunes cards?|google play cards?|steam cards?|voucher codes?)\b/i,
-      /\b(bitcoin|btc|usdt|crypto(currency)?|ethereum|wallet address)\b/i,
+      /\b(pay|send|transfer|deposit|invest|buy)\b[^.!?\n]{0,40}\b(bitcoin|btc|usdt|crypto(currency)?|ethereum)\b/i,
+      /\b(bitcoin|btc|usdt|ethereum) (atm|wallet|address|deposit)\b|\bwallet address\b/i,
       /\b(western union|moneygram|wire transfer|bank transfer to)\b/i,
     ],
   },
@@ -72,7 +73,10 @@ const SIGNALS = [
     weight: 2,
     title: 'It asks for a fee before you get something',
     detail: 'Paying a fee to release a prize, loan, parcel or job is an advance-fee scam.',
-    patterns: [/\b(processing|release|clearance|customs|delivery|registration|activation|handling) (fee|charge)\b/i],
+    patterns: [
+      /\b(processing|release|clearance|customs|delivery|registration|activation|handling|withdrawal|unlock|insurance|tax) (fee|charge|deposit)\b/i,
+      /\bpay (a |the )?(tax|fee|deposit)\b[^.!?\n]{0,30}\b(withdraw|release|unlock|receive|claim)\b/i,
+    ],
   },
   {
     id: 'new-number',
@@ -80,6 +84,63 @@ const SIGNALS = [
     title: 'Someone you know says they have a new number',
     detail: 'Scammers pose as family or friends with a "new number", then ask for money.',
     patterns: [/\b(hi|hey|hello) (mum|mom|dad|mama|papa)\b[^]{0,120}\b(new (number|phone)|lost my phone|broke(n)? my phone)\b/i, /\bthis is my new number\b/i],
+  },
+  {
+    id: 'recovery-offer',
+    weight: 3,
+    title: 'It offers to recover money you lost',
+    detail: 'People who have lost money to a scam are targeted again by "recovery" services that charge a fee and recover nothing.',
+    patterns: [
+      /\b(fund|funds|crypto|bitcoin|money) recovery\b/i,
+      /\brecover(y of)? (your |the )?(lost |stolen )?(funds|money|crypto|bitcoin|investment)\b/i,
+      /\bwe (can |will )?(get|recover|retrieve|trace) (back )?your (money|funds|crypto|bitcoin)\b/i,
+    ],
+  },
+  {
+    id: 'investment-pitch',
+    weight: 2,
+    title: 'It pitches an investment group or platform',
+    detail: 'Trading groups, "signals", AI trading bots and mentors who promise profits are how most investment scams begin.',
+    patterns: [
+      /\b(trading|investment|investing) (group|signals?|bot|platform|mentor)\b/i,
+      /\b(vip|private|exclusive) (group|channel|trading|investment)\b/i,
+      /\b(insider (tips?|information)|ai[- ](powered|driven) trading|crypto (mining|trading) platform|forex signals?)\b/i,
+      /\b(my|our) (analyst|mentor|assistant)\b[^.!?\n]{0,40}\b(invest|trade|profit|returns?)\b/i,
+      /\b(your|my) (profits?|earnings|balance) (is|are) (ready|available|waiting)\b/i,
+    ],
+  },
+  {
+    id: 'job-fee',
+    weight: 3,
+    title: 'A job that asks you to pay, or to cash a cheque and send money on',
+    detail: 'A real employer does not ask you to buy equipment, pay for training or checks, or deposit a cheque and send part of it elsewhere.',
+    patterns: [
+      /\b(buy|purchase|pay for|order)\b[^.!?\n]{0,25}\b(equipment|laptop|software|starter kit|training (materials|course)|supplies)\b/i,
+      /\b(background check|training|equipment|onboarding|starter kit|account activation) (fee|cost|payment|deposit)\b/i,
+      /\b(deposit|cash)( the| this| that| your)? (cheque|check)\b[^.!?\n]{0,80}\b(send|transfer|return|wire|forward|buy)\b/i,
+    ],
+  },
+  {
+    id: 'job-bait',
+    weight: 2,
+    title: 'An unrequested job offer with easy pay',
+    detail: 'Offers you did not apply for, with no experience needed or no interview, are the usual start of a job scam.',
+    patterns: [
+      /\bwe (found|saw|came across) your (resume|cv|profile)\b/i,
+      /\bno experience (is )?(needed|required|necessary)\b/i,
+      /\b(hired|offered the (job|position)) (without|with no) (an )?interview\b/i,
+      /\b(daily|weekly) (pay|payment|salary)\b[^.!?\n]{0,20}\$?\d/i,
+    ],
+  },
+  {
+    id: 'family-emergency',
+    weight: 2,
+    title: 'A family member in trouble who needs money now',
+    detail: 'Voices and messages can be faked. Hang up and call the person on the number you already have, or ask for your agreed safe word.',
+    patterns: [
+      /\b(i('m| am)|he('s| is)|she('s| is)) (in (jail|custody|the hospital)|been (arrested|in an accident))\b[^]{0,160}\b(send|wire|transfer|pay|bail|money)\b/i,
+      /\b(need|needs) (bail|bail money)\b/i,
+    ],
   },
   {
     id: 'move-channel',

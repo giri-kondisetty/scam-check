@@ -17,6 +17,8 @@ const EXAMPLES = {
   parcel: 'USPS: Your package is on hold because of an unpaid customs fee. Pay within 24 hours at usps.com-track-package[.]info or it will be returned.',
   bank: 'Chase alert: a sign-in from a new device was blocked. Your account will be locked. Reply with the 6-digit code we just sent you to confirm it is you.',
   boss: "Hi, it's your manager. I'm in a meeting and can't talk. Can you buy 5 Apple gift cards and send me the codes? Don't tell anyone, I'll pay you back today.",
+  invest: "Hi, I'm Anna, my analyst runs a private trading group with guaranteed returns of 5% daily. Message me on WhatsApp to join, withdrawals are instant.",
+  job: 'We found your resume. Part-time job, no experience needed, daily pay $300. Buy your own laptop and software from our vendor first, we refund you on day one.',
   normal: 'Hey, are we still on for dinner on Friday at 7? Let me know.',
 };
 

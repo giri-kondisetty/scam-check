@@ -22,7 +22,8 @@ stored.
 
 1. **Warning signs in the text.** Requests for codes or passwords, payment by
    gift card, crypto or wire transfer, remote-access apps, pressure, threats,
-   unexpected prizes, easy money, advance fees, "new number" messages.
+   unexpected prizes, easy money, advance fees, investment groups, fake jobs,
+   offers to recover lost money, family emergencies, "new number" messages.
 2. **Link checks.** Bare number addresses, look-alike characters, hidden
    destinations, shortened links, and well-known names on someone else's site.
 3. **Reported scam sites.** Each link's site is compared with a list of

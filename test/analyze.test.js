@@ -108,3 +108,59 @@ test('a message that says not to share the code but then asks for it is still fl
   const result = await analyze('Do not share this code with anyone else. Send us the verification code to confirm.');
   assert.ok(ids(result).includes('asks-for-code'));
 });
+
+test('an investment group pitch that moves to WhatsApp is a scam', async () => {
+  const result = await analyze(
+    'Hello, my analyst runs a VIP trading group with guaranteed returns of 5% daily. Message me on WhatsApp to join.',
+  );
+  assert.equal(result.verdict, 'scam');
+  assert.ok(ids(result).includes('investment-pitch'));
+});
+
+test('a fee to withdraw profits is an advance-fee sign', async () => {
+  const result = await analyze('Your profits are ready. Pay a tax of $400 to unlock your withdrawal.');
+  assert.ok(ids(result).includes('advance-fee'));
+  assert.notEqual(result.verdict, 'none');
+});
+
+test('an offer to recover lost crypto is flagged strongly', async () => {
+  const result = await analyze('We can recover your lost funds from the scam. Fund recovery fee applies.');
+  assert.ok(ids(result).includes('recovery-offer'));
+  assert.notEqual(result.verdict, 'none');
+});
+
+test('a job that asks you to buy equipment is a scam', async () => {
+  const result = await analyze(
+    'We found your resume. No experience needed, daily pay $300. You will buy your own laptop and software from our vendor first.',
+  );
+  assert.equal(result.verdict, 'scam');
+  assert.ok(ids(result).includes('job-fee'));
+});
+
+test('a cheque that you are asked to deposit and send part of is flagged', async () => {
+  const result = await analyze('Deposit the cheque we mail you, then send the extra amount back by wire.');
+  assert.ok(ids(result).includes('job-fee'));
+});
+
+test('a family emergency asking for bail money is flagged', async () => {
+  const result = await analyze("Grandma it's me, I'm in jail after an accident. Please wire money for bail, don't tell mom.");
+  assert.ok(ids(result).includes('family-emergency'));
+  assert.notEqual(result.verdict, 'none');
+});
+
+test('ordinary talk about crypto, jobs and investing is not flagged', async () => {
+  for (const text of [
+    'I bought some bitcoin last year and it did okay.',
+    'My new job starts Monday, they gave me a laptop on day one.',
+    'The trading team at my bank had a meeting today, nothing exciting.',
+    'We are hiring a part time designer. Please send your portfolio.',
+  ]) {
+    const result = await analyze(text);
+    assert.equal(result.verdict, 'none', text);
+  }
+});
+
+test('paying with crypto is still a strong sign', async () => {
+  const result = await analyze('Please pay the invoice in bitcoin to this wallet address.');
+  assert.equal(result.verdict, 'scam');
+});

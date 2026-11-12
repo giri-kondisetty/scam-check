@@ -189,3 +189,11 @@ a { color: var(--accent); }
 @media (prefers-reduced-motion: no-preference) {
   button { transition: border-color .12s, opacity .12s; }
 }
+
+.family {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+.family h2 { font-size: 1rem; margin: 0 0 0.5rem; }
+.family ul { margin: 0; padding-left: 1.2rem; display: grid; gap: 0.4rem; color: var(--muted); }
